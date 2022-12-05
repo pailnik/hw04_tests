@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 
 from ..forms import PostForm
-from ..models import Post, Group
+from ..models import Post
 from django.test import Client, TestCase
 from django.urls import reverse
 

@@ -44,8 +44,8 @@ class PostPagesTests(TestCase):
                         kwargs={'slug': 'test-slug'})
             ),
             'posts/create_post.html': reverse('posts:post_edit'),
-            'posts/create_post.html': reverse('posts:create_post'),
-
+            # 'posts/create_post.html':
+            # reverse('posts:create_post'),
         }
         # Проверяем, что при обращении к name вызывается
         # соответствующий HTML-шаблон
