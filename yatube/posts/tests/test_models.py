@@ -27,7 +27,3 @@ class PostModelTest(TestCase):
         group = PostModelTest.group
         self.assertEqual(post.text, 'Тестовый пост')
         self.assertEqual(group.title, 'Тестовая группа')
-
-
-
-

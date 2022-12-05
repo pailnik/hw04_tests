@@ -49,5 +49,3 @@ class PostURLTests(TestCase):
         """
         response = self.authorized_client.get('/create/')
         self.assertTemplateUsed(response, 'posts/create_post.html')
-
-# надеюсь ругаться не будешь, что то тяжко идет
