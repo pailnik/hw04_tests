@@ -6,7 +6,9 @@ User = get_user_model()
 
 
 class Group(models.Model):
-    title = models.CharField(max_length=200, unique=True, verbose_name='title')
+    title = models.CharField(max_length=200,
+                             unique=True,
+                             verbose_name='title')
     slug = models.SlugField(unique=True, verbose_name='slug')
     description = models.TextField(verbose_name='description')
 

@@ -55,4 +55,3 @@ class PostURLTests(TestCase):
     def test_urls_author_users_correct_template(self):
         response = self.author.get('/posts/5/edit/')
         self.assertEqual(response.status_code, 200)
-

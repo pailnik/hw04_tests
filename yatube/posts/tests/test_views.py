@@ -44,7 +44,8 @@ class PostPagesTests(TestCase):
             reverse('posts:post_detail', kwargs={'post_id': self.post.id}):
                 'posts/post_detail.html',
             reverse('posts:post_create'): 'posts/create_post.html'
-            }
+        }
+
         """ Проверяем, что при обращении к name вызывается
             соответствующий HTML-шаблон"""
         for reverse_name, template in templates_pages_names.items():
@@ -82,10 +83,3 @@ class PostPagesTests(TestCase):
         group_title_test_0 = first_object.group.title
         self.assertEqual(post_text_0, 'Text_post')
         self.assertEqual(group_title_test_0, 'Aga')
-
-
-
-
-
-
-
