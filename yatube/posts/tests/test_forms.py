@@ -1,10 +1,9 @@
 from django.contrib.auth import get_user_model
-
-from ..forms import PostForm
-from ..models import Post
 from django.test import Client, TestCase
 from django.urls import reverse
 
+from ..forms import PostForm
+from ..models import Group, Post
 
 User = get_user_model()
 
@@ -13,42 +12,78 @@ class TaskCreateFormTests(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        # Создаем запись в базе данных для проверки сушествующего slug
-        cls.user = User.objects.create(username='Wanderer')
-        cls.post = Post.objects.create(
-            text='Тестовый пост',
-            author=cls.user,
-            id=5,
+        cls.user = User.objects.create_user(username='auth')
+        cls.group = Group.objects.create(
+            title='Тестовая группа',
+            slug='rats',
+            description='Тестовое описание',
         )
-        # Создаем форму, если нужна проверка атрибутов
+        cls.post = Post.objects.create(
+            text='Тестовая запись Формы',
+            author=cls.user,
+            group=cls.group
+        )
         cls.form = PostForm()
 
     def setUp(self):
-        # Создаем неавторизованный клиент
-        self.guest_client = Client()
+        self.authorized_client = Client()
+        self.authorized_client.force_login(self.user)
 
-    def test_create_task(self):
+    def test_create_post(self):
         """Валидная форма создает запись в Post."""
-        # Подсчитаем количество записей в Task
-        posts_count = Post.objects.count()
+        post_count = Post.objects.count()
         form_data = {
-            'title': 'Тестовый заголовок',
-            'text': 'Тестовый текст',
+            'text': 'Тест-test Post-Пост',
+            'group': self.group.id,
         }
-        # Отправляем POST-запрос
-        response = self.guest_client.post(
-            reverse('posts:profile'),
+        response = self.authorized_client.post(
+            reverse('posts:post_create'),
             data=form_data,
             follow=True
         )
-        # Проверяем, сработал ли редирект
-        self.assertRedirects(response, reverse('posts:profile'))
-        # Проверяем, увеличилось ли число постов
-        self.assertEqual(Post.objects.count(), posts_count + 1)
-        # Проверяем, что создалась запись с заданным слагом
+        self.assertRedirects(
+            response,
+            reverse(('posts:profile'),
+                    kwargs={'username': 'auth'})
+        )
+        self.assertEqual(Post.objects.count(), post_count + 1)
         self.assertTrue(
             Post.objects.filter(
-                slug='testovyij-zagolovok',
-                text='Тестовый текст',
+                text='Тест-test Post-Пост',
             ).exists()
         )
+
+    def test_edit_post(self):
+        """Валидная форма создает запись в Post."""
+        post_count = Post.objects.count()
+        form_data = {
+            'text': 'Тест-test Post-Пост',
+            'group': self.group.id,
+        }
+        self.authorized_client.post(
+            reverse('posts:post_create'),
+            data=form_data,
+            follow=True
+        )
+        """Валидная форма редактирует запись в Post."""
+        post_count = Post.objects.count()
+        form_data = {
+            'text': 'Тест Пост',
+            'group': self.group.id,
+        }
+        post = Post.objects.get(text='Тест-test Post-Пост')
+        post_id = post.id
+        self.authorized_client.post(
+            reverse(('posts:post_edit'),
+                    args=(post.id,)),
+            data=form_data,
+            follow=True
+        )
+        self.assertEqual(Post.objects.count(), post_count)
+        self.assertTrue(
+            Post.objects.filter(
+                text='Тест Пост',
+            ).exists()
+        )
+        edited_post = Post.objects.get(text='Тест Пост')
+        self.assertEqual(edited_post.id, post_id)
