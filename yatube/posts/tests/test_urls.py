@@ -59,5 +59,5 @@ class PostURLTests(TestCase):
         self.assertEqual(response.status_code, 302)
 
     def test_urls_authorized_client_users_correct_template(self):
-        response = self.authorized_client.get(f'/post/5/edit/')
+        response = self.authorized_client.get('/post/5/edit/')
         self.assertEqual(response.status_code, 404)
