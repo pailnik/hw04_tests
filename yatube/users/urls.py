@@ -9,6 +9,7 @@ from django.contrib.auth.views import PasswordResetCompleteView
 from django.urls import path
 from . import views
 
+handler404 = 'core.views.page_not_found'
 app_name = 'users'
 
 urlpatterns = [

@@ -33,13 +33,11 @@ class PostURLTests(TestCase):
 
     def test_urls_uses_correct_template(self):
         """URL-адрес использует соответствующий шаблон."""
-        # Шаблоны по адресам
         templates_url_names = {
             'posts/index.html': '/',
-            'posts/group_list.html': '/group/test-slug/',
-            'posts/profile.html': '/profile/test_wanderer/',
-            'posts/post_detail.html': '/posts/5/',
-
+            'posts/group_list.html': f'/group/{self.group.slug}/',
+            'posts/profile.html': f'/profile/{self.user.username}/',
+            'posts/post_detail.html': f'/posts/{self.post.id}/',
         }
         for template, address in templates_url_names.items():
             with self.subTest(address=address):
@@ -55,3 +53,11 @@ class PostURLTests(TestCase):
     def test_urls_author_users_correct_template(self):
         response = self.author.get('/posts/5/edit/')
         self.assertEqual(response.status_code, 200)
+
+    def test_urls_guest_users_correct_template(self):
+        response = self.guest_client.get('/posts/5/edit/')
+        self.assertEqual(response.status_code, 302)
+
+    def test_urls_authorized_client_users_correct_template(self):
+        response = self.authorized_client.get(f'/post/5/edit/')
+        self.assertEqual(response.status_code, 404)

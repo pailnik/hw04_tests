@@ -1,16 +1,16 @@
 {% extends "base.html" %}
 {% block title %}Профайл пользователя {{ author.get_full_name }} {% endblock %}
 {% block content %}
-  <h1>Все посты пользователя {{ author.get_full_name }}<!--Лев Толстой--> </h1>
+  <h1>Все посты пользователя {{ author.get_full_name }} </h1>
   <h3>Всего постов: {{ author.posts.count }}</h3>   
   {% for post in page_obj %}
   <article>
     <ul>
       <li>
-        Автор: {{ post.author.get_full_name }}<!--Лев Толстой-->
+        Автор: {{ post.author.get_full_name }}
       </li>
       <li>
-        Дата публикации: {{ post.pub_date|date:"d E Y" }}<!-- 31 июля 1854 --> 
+        Дата публикации: {{ post.pub_date|date:"d E Y" }}
       </li>
     </ul>
     <p>

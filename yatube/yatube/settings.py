@@ -6,6 +6,7 @@ POST_PER_PAGE = 10
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SECRET_KEY = '!30%rchbodcwsy2(3gph2wn_yr2o5@u@a$oya-h-gqt^r=uxce'
+CSRF_FAILURE_VIEW = 'core.views.csrf_failure'
 
 DEBUG = True
 

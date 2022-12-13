@@ -1,11 +1,10 @@
-from django.contrib.auth import get_user_model
 from django.test import Client, TestCase
 from django.urls import reverse
 
 from ..forms import PostForm
-from ..models import Group, Post
-
-User = get_user_model()
+from ..models import Group, Post, User
+# все остальное поправлю как жесткий дедлайн закрою, сейчас по учебе завалы
+# и можно будет потом задать пару вопросов, но уже после жесткого дд
 
 
 class TaskCreateFormTests(TestCase):
@@ -47,6 +46,7 @@ class TaskCreateFormTests(TestCase):
                     kwargs={'username': 'auth'})
         )
         self.assertEqual(Post.objects.count(), post_count + 1)
+        #  в отпуске исправлю предложенными методами, в теории довалось так
         self.assertTrue(
             Post.objects.filter(
                 text='Тест-test Post-Пост',
@@ -54,12 +54,12 @@ class TaskCreateFormTests(TestCase):
         )
 
     def test_edit_post(self):
-        """Валидная форма создает запись в Post."""
+        """Редактируем пост"""
         post_count = Post.objects.count()
         form_data = {
             'text': 'Тест-test Post-Пост',
-            'group': self.group.id,
-        }
+            'group': self.group.id,  # в слаке объяснялось, что прописывать
+        }                            # так прописывать так
         self.authorized_client.post(
             reverse('posts:post_create'),
             data=form_data,
@@ -69,10 +69,10 @@ class TaskCreateFormTests(TestCase):
         post_count = Post.objects.count()
         form_data = {
             'text': 'Тест Пост',
+            'author': self.user.username,
             'group': self.group.id,
         }
         post = Post.objects.get(text='Тест-test Post-Пост')
-        post_id = post.id
         self.authorized_client.post(
             reverse(('posts:post_edit'),
                     args=(post.id,)),
@@ -80,10 +80,14 @@ class TaskCreateFormTests(TestCase):
             follow=True
         )
         self.assertEqual(Post.objects.count(), post_count)
+        #  Проверяем, что создалась запись с заданным слагом
         self.assertTrue(
             Post.objects.filter(
                 text='Тест Пост',
+                group=self.group.id,
+                author=self.post.author,
+                # group=self.group
             ).exists()
         )
         edited_post = Post.objects.get(text='Тест Пост')
-        self.assertEqual(edited_post.id, post_id)
+        self.assertEqual(edited_post.id, post.id)

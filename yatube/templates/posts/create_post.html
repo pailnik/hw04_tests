@@ -1,41 +1,41 @@
 {% extends "base.html" %}
 {% block title %} Новый пост
 {% endblock %}
-{% block content %} 
+{% block content %}
     <main>
       <div class="container py-5">
         <div class="row justify-content-center">
           <div class="col-md-8 p-5">
             <div class="card">
-              <div class="card-header">       
-              {% if is_edit %}       
+              <div class="card-header">
+              {% if is_edit %}
                 Редактировать пост
               {% else %}
                 Новый пост
-              {% endif %}             
+              {% endif %}
               </div>
-              <div class="card-body">        
-                {% if is_edit %}        
+              <div class="card-body">
+                {% if is_edit %}
                 <form method="post" action="{% url 'posts:post_edit' post.id %}">
                 {% csrf_token %}
                 {% else %}
                 <form method="post" action="{% url 'posts:post_create' %}">
                 {% csrf_token %}
-                {% endif%}    
+                {% endif%}
                   <div class="form-group row my-3 p-3">
                     <label for="id_text">
-                      Текст поста                  
-                      <span class="required text-danger" >*</span>                  
+                      Текст поста
+                      <span class="required text-danger" >*</span>
                     </label>
                     <textarea name="text" cols="40" rows="10" class="form-control" required id="id_text">
-                    </textarea>                
+                    </textarea>
                     <small id="id_text-help" class="form-text text-muted">
                       Текст нового поста
-                    </small>                  
-                  </div>            
+                    </small>
+                  </div>
                   <div class="form-group row my-3 p-3">
                     <label for="id_group">
-                      Группа                  
+                      Группа
                     </label>
                     <select name="group" class="form-control" id="id_group">
                       {% for object in form.group %}
@@ -52,7 +52,7 @@
                       Сохранить
                     {% else %}
                       Добавить
-                    {% endif %}  
+                    {% endif %}
                     </button>
                   </div>
                 </form>
