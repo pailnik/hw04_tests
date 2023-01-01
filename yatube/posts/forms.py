@@ -11,3 +11,7 @@ class PostForm(forms.ModelForm):
             'text': 'пост',
         }
         fields = ('text', 'group', 'image')
+
+
+class CommentForm(forms.ModelForm):
+    pass

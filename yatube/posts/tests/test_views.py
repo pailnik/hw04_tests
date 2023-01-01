@@ -101,40 +101,11 @@ class PostPagesTests(TestCase):
             'posts:post_detail', kwargs={'post_id': self.post.id}))
         self.check_post_attr(response.context.get('post'))
 
-    """def test_group_list_context(self):
-        Шаблон group_list
-        response = self.guest_client.get(
-            reverse('posts:group_list', kwargs={'slug': self.group.slug})
-        )
-        expected = list(Post.objects.filter(group_id=self.group.id)[:10])
-        self.assertEqual(list(response.context['page_obj']), expected)
-
-    def test_index_context(self):
-        response = self.guest_client.get(reverse('posts:index'))
-        expected = list(Post.objects.all()[:10])
-        self.assertEqual(list(response.context['page_obj']), expected)"""
-
     def test_index_page_show_correct_creation(self):
         """Созданный пост оказалася на странице index"""
         response = self.authorized_client.get(reverse('posts:index'))
         first_object = response.context['page_obj'][0]
         self.check_post_attr(first_object)
-
-    """def check_group(self):
-        form_fields = {
-            reverse('posts:index'): Post.objects.get(group=self.post.group),
-            reverse(
-                'posts:group_list', kwargs={'slug': self.group.slug}
-            ): Post.objects.get(group=self.post.group),
-            reverse(
-                'posts:profile', kwargs={'username': self.post.author}
-            ): Post.objects.get(group=self.post.group),
-        }
-        for value, expected in form_fields.items():
-            with self.subTest(value=value):
-                response = self.authorized_client.get(value)
-                form_field = response.context['page_obj'][0]
-                self.assertIn(expected, form_field)"""
 
     def test_check_group_not_in_mistake_group_list_page(self):
         """Проверяем чтобы созданный

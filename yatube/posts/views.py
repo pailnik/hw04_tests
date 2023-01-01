@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 
 from .utilities import get_paginator
 from .models import Group, Post, User
-from .forms import PostForm
+from .forms import PostForm, CommentForm
 
 LIMIT_POSTS = 10
 
@@ -80,3 +80,15 @@ def post_edit(request, post_id):
         'post': post,
     }
     return render(request, 'posts/create_post.html', context)
+
+
+@login_required
+def add_comment(request, post_id):
+    # Получите пост и сохраните его в переменную post.
+    form = CommentForm(request.POST or None)
+    if form.is_valid():
+        comment = form.save(commit=False)
+        comment.author = request.user
+        # comment.post = post
+        comment.save()
+    return redirect('posts:post_detail', post_id=post_id)
