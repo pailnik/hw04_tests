@@ -11,5 +11,3 @@ class PostForm(forms.ModelForm):
             'text': 'пост',
         }
         fields = ('text', 'group', 'image')
-
-
