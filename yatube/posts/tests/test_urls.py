@@ -1,9 +1,6 @@
-from django.contrib.auth import get_user_model
 from django.test import TestCase, Client
 
-from ..models import Group, Post
-
-User = get_user_model()
+from ..models import Group, Post, User
 
 
 class PostURLTests(TestCase):
@@ -50,14 +47,30 @@ class PostURLTests(TestCase):
         response = self.authorized_client.get('/create/')
         self.assertTemplateUsed(response, 'posts/create_post.html')
 
+    def test_posts_edit_correct_template(self):
+        """Страница 'posts/<int:post_id>/edit/' использует
+        шаблон posts/create_post.html."""
+        response = self.author.get(f'/posts/{self.post.id}/edit/')
+        self.assertTemplateUsed(response, 'posts/create_post.html')
+
     def test_urls_author_users_correct_template(self):
-        response = self.author.get('/posts/5/edit/')
+        response = self.author.get(f'/posts/{self.post.id}/edit/')
         self.assertEqual(response.status_code, 200)
 
     def test_urls_guest_users_correct_template(self):
-        response = self.guest_client.get('/posts/5/edit/')
+        response = self.guest_client.get(f'/posts/{self.post.id}/edit/')
         self.assertEqual(response.status_code, 302)
+        # self.assertRedirects(
+        # response, f'/auth/login/?next=/posts/{self.post.id}/edit/')
 
     def test_urls_authorized_client_users_correct_template(self):
-        response = self.authorized_client.get('/post/5/edit/')
-        self.assertEqual(response.status_code, 404)
+        response = self.authorized_client.get(f'/posts/{self.post.id}/edit/')
+        self.assertEqual(response.status_code, 302)
+
+    def test_post_edit_url_redirect_anonymous_on_admin_login(self):
+        """Страница по адресу /post/id/edit перенаправит анонимного
+        пользователя на страницу логина.
+        """
+        response = self.guest_client.get(f'/posts/{self.post.id}/edit/')
+        self.assertRedirects(
+            response, f'/auth/login/?next=/posts/{self.post.id}/edit/')

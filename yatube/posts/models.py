@@ -16,9 +16,19 @@ class Group(models.Model):
         return self.title
 
 
+class Comment(models.Model):
+    pass
+
+
 class Post(models.Model):
-    text = models.TextField()
-    pub_date = models.DateTimeField(auto_now_add=True)
+    text = models.TextField(
+        'Текст поста',
+        help_text='Введите текст поста'
+    )
+    pub_date = models.DateTimeField(
+        'Дата публикации',
+        auto_now_add=True
+    )
     group = models.ForeignKey(
         Group,
         blank=True,
@@ -30,6 +40,11 @@ class Post(models.Model):
         User,
         on_delete=models.CASCADE,
         related_name='posts'
+    )
+    image = models.ImageField(
+        'Картинка',
+        upload_to='posts/',
+        blank=True
     )
 
     class Meta:
