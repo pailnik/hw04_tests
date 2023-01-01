@@ -10,7 +10,7 @@ class PostForm(forms.ModelForm):
             'group': 'группа',
             'text': 'пост',
         }
-        fields = ('text', 'group', 'image')
+        fields = ('text', 'group')
 
 
 class CommentForm(forms.ModelForm):
